@@ -85,11 +85,11 @@ impl Todo {
                 if symbol == "[*] " {
                     // DONE
                     // If the task is completed, then it prints it with a strikethrough
-                    data = format!("{} {}\n", number, task.strikethrough());
+                    data = format!("{}. {}\n", number, task.strikethrough());
                 } else if symbol == "[ ] " {
                     // NOT DONE
                     // If the task is not completed yet, then it will print it as it is
-                    data = format!("{} {}\n", number, task);
+                    data = format!("{}. {}\n", number, task);
                 }
                 writer
                     .write_all(data.as_bytes())
@@ -287,20 +287,20 @@ impl Todo {
     }
 
     pub fn edit(&self, args: &[String]) {
-        if args.is_empty() || args.len() != 2{
+        if args.is_empty() || args.len() != 2 {
             eprintln!("todo edit takes exact 2 arguments");
             process::exit(1);
         }
         // Opens the TODO file with a permission to overwrite it
         let todofile = OpenOptions::new()
-        .write(true)
-        .truncate(true)
-        .open(&self.todo_path)
-        .expect("Couldn't open the todofile");
+            .write(true)
+            .truncate(true)
+            .open(&self.todo_path)
+            .expect("Couldn't open the todofile");
         let mut buffer = BufWriter::new(todofile);
 
         for (pos, line) in self.todo.iter().enumerate() {
-            if line.len() > 5{
+            if line.len() > 5 {
                 if args[0].contains(&(pos + 1).to_string()) {
                     if &line[..4] == "[ ] " {
                         let line = format!("[ ] {}\n", &args[1]);
@@ -312,7 +312,7 @@ impl Todo {
                         buffer
                             .write_all(line.as_bytes())
                             .expect("unable to write data");
-                    } 
+                    }
                 } else if &line[..4] == "[ ] " || &line[..4] == "[*] " {
                     let line = format!("{}\n", line);
                     buffer
@@ -321,7 +321,6 @@ impl Todo {
                 }
             }
         }
-
     }
 }
 
